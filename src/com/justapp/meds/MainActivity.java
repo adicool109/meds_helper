@@ -15,7 +15,6 @@ import android.widget.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends ListActivity {
@@ -27,7 +26,7 @@ public class MainActivity extends ListActivity {
         allCategoriesIds.clear();
         allCategoriesTitles.clear();
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.drug_list);
+        setContentView(R.layout.list);
         DBHelper myDbHelper = new DBHelper(this);
         myDbHelper = new DBHelper(this);
 
@@ -93,6 +92,10 @@ public class MainActivity extends ListActivity {
                 SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
                         SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
                 suggestions.clearHistory();
+                return true;
+            case R.id.about:
+                Intent i = new Intent(MainActivity.this, AboutActivity.class);
+                startActivity(i);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

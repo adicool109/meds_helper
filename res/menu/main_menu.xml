@@ -7,4 +7,6 @@
           android:title="Quit" />
     <item android:id="@+id/clear_recent_suggestions"
           android:title="Clear search history" />
+    <item android:id="@+id/about"
+          android:title="About" />
 </menu>

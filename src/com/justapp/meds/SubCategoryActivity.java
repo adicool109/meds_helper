@@ -28,7 +28,7 @@ public class SubCategoryActivity extends ListActivity {
         int selectedId = getIntent().getExtras().getInt("id");
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.drug_list);
+        setContentView(R.layout.list);
         DBHelper myDbHelper = new DBHelper(this);
         myDbHelper = new DBHelper(this);
 

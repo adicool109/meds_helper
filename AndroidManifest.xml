@@ -24,6 +24,7 @@
         <activity android:name=".DrugsListActivity"/>
         <activity android:name=".SubCategoryActivity"/>
         <activity android:name=".DrugActivity"/>
+        <activity android:name=".AboutActivity"/>
         <activity android:name=".SearchActivity"/>
         <provider android:name=".SuggestionProvider"
                   android:authorities="com.justapp.meds.SuggestionProvider"/>

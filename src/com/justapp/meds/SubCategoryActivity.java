@@ -2,6 +2,7 @@ package com.justapp.meds;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,8 @@ public class SubCategoryActivity extends ListActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        allSubCatsTitle.clear();
+        allSubCatsIds.clear();
         String title = getIntent().getExtras().getString("title");
         int selectedId = getIntent().getExtras().getInt("id");
 
@@ -36,8 +39,13 @@ public class SubCategoryActivity extends ListActivity {
         }
         try {
             myDbHelper.openDataBase();
-            allSubCatsTitle = myDbHelper.getSubCatsTitlesById(selectedId);
-            allSubCatsIds = myDbHelper.getSubCatsIdsById(selectedId);
+            Cursor cursor = myDbHelper.getSubCatsById(selectedId);
+            if (cursor.moveToFirst()) {
+                do {
+                    allSubCatsTitle.add(stringHelper.asUpperCaseFirstChar(cursor.getString(1)));
+                    allSubCatsIds.add(Integer.parseInt(cursor.getString(0)));
+                } while (cursor.moveToNext());
+            }
             myDbHelper.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -48,7 +56,6 @@ public class SubCategoryActivity extends ListActivity {
         TextView categoryName = (TextView) header.findViewById(R.id.categoryName);
         categoryName.setText(title);
         lv.addHeaderView(header, null, false);
-        //lv.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1, allSubCatsTitle));
         lv.setAdapter(new ArrayAdapter<String>(this,R.layout.list_black_text,R.id.list_content, allSubCatsTitle));
 
     }

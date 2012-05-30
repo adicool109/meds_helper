@@ -6,12 +6,10 @@ import android.webkit.WebView;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.sql.SQLException;
 
 public class DrugActivity extends Activity {
-    static String drugInfo = new String();
+    static String drugInfo = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

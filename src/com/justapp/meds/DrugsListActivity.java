@@ -2,6 +2,7 @@ package com.justapp.meds;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +17,11 @@ import java.util.List;
 public class DrugsListActivity extends ListActivity {
     static List<String> allDrugsTitles = new ArrayList<String>();
     static List<Integer> allDrugsIds = new ArrayList<Integer>();
-    static boolean isSubCat;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        allDrugsIds.clear();
+        allDrugsTitles.clear();
         String title = getIntent().getExtras().getString("title");
         int selectedId = getIntent().getExtras().getInt("id");
 
@@ -35,20 +37,23 @@ public class DrugsListActivity extends ListActivity {
         }
         try {
             myDbHelper.openDataBase();
-            allDrugsTitles = myDbHelper.getDrugsTitleById(selectedId);
-            allDrugsIds = myDbHelper.getDrugsIdById(selectedId);
+            Cursor cursor = myDbHelper.getDrugsById(selectedId);
+            if (cursor.moveToFirst()) {
+                do {
+                    allDrugsTitles.add(stringHelper.asUpperCaseFirstChar(cursor.getString(1)));
+                    allDrugsIds.add(Integer.parseInt(cursor.getString(0)));
+                } while (cursor.moveToNext());
+            }
             myDbHelper.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        //add header to list
         ListView lv = getListView();
         LayoutInflater inflater = getLayoutInflater();
         View header = inflater.inflate(R.layout.list_header, (ViewGroup) findViewById(R.id.header_layout_root));
         TextView categoryName = (TextView) header.findViewById(R.id.categoryName);
         categoryName.setText(title);
         lv.addHeaderView(header, null, false);
-//        lv.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1, allDrugsTitles));
         lv.setAdapter(new ArrayAdapter<String>(this,R.layout.list_black_text,R.id.list_content, allDrugsTitles));
     }
 

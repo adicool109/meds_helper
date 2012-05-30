@@ -3,6 +3,7 @@ package com.justapp.meds;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.view.Menu;
@@ -14,6 +15,7 @@ import android.widget.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends ListActivity {
@@ -22,6 +24,8 @@ public class MainActivity extends ListActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        allCategoriesIds.clear();
+        allCategoriesTitles.clear();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drug_list);
         DBHelper myDbHelper = new DBHelper(this);
@@ -34,16 +38,18 @@ public class MainActivity extends ListActivity {
         }
         try {
             myDbHelper.openDataBase();
-
-            allCategoriesTitles = myDbHelper.getAllCategories();
-            allCategoriesIds = myDbHelper.getAllCategoriesId();
-
+            Cursor cursor = myDbHelper.getAllCategories();
+            if (cursor.moveToFirst()) {
+                do {
+                    allCategoriesTitles.add(stringHelper.asUpperCaseFirstChar(cursor.getString(1)));
+                    allCategoriesIds.add(Integer.parseInt(cursor.getString(0)));
+                } while (cursor.moveToNext());
+            }
             myDbHelper.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        //
-        // setListAdapter(new ArrayAdapter<String>(this, R.layout.main, allCategoriesTitles));
+
         ListView listView = getListView();
         listView.setTextFilterEnabled(true);
         //todo add header
@@ -67,18 +73,6 @@ public class MainActivity extends ListActivity {
                 }
             }
         });
-//        Intent intent = getIntent();
-//        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-//            String query = intent.getStringExtra(SearchManager.QUERY);
-//            //Создаем экземпляр SearchRecentSuggestions
-//            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-//                    SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
-//            //Сохраняем запрос
-//            suggestions.saveRecentQuery(query, null);
-//            Intent i = new Intent(MainActivity.this, SearchActivity.class);
-//            i.putExtra("searchString", query);
-//            startActivity(i);
-//        }
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

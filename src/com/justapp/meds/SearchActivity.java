@@ -1,7 +1,6 @@
 package com.justapp.meds;
 
 import android.app.ListActivity;
-import android.app.SearchManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;

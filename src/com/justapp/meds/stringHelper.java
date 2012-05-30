@@ -4,8 +4,7 @@ public class stringHelper {
     public final static String asUpperCaseFirstChar(final String target) {
 
         if ((target == null) || (target.length() == 0)) {
-            return target; // You could omit this check and simply live with an
-            // exception if you like
+            return target;
         }
         return Character.toUpperCase(target.charAt(0))
                 + (target.length() > 1 ? target.substring(1) : "");

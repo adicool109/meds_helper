@@ -1,8 +1,13 @@
 package com.justapp.meds;
 
 import android.app.ListActivity;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 
@@ -37,12 +42,12 @@ public class MainActivity extends ListActivity {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-          //
-       // setListAdapter(new ArrayAdapter<String>(this, R.layout.main, allCategoriesTitles));
+        //
+        // setListAdapter(new ArrayAdapter<String>(this, R.layout.main, allCategoriesTitles));
         ListView listView = getListView();
         listView.setTextFilterEnabled(true);
         //todo add header
-        listView.setAdapter(new ArrayAdapter<String>(this,R.layout.list_black_text,R.id.list_content, allCategoriesTitles));
+        listView.setAdapter(new ArrayAdapter<String>(this, R.layout.list_black_text, R.id.list_content, allCategoriesTitles));
 
         final DBHelper finalMyDbHelper = myDbHelper;
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -62,5 +67,60 @@ public class MainActivity extends ListActivity {
                 }
             }
         });
+//        Intent intent = getIntent();
+//        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+//            String query = intent.getStringExtra(SearchManager.QUERY);
+//            //Создаем экземпляр SearchRecentSuggestions
+//            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+//                    SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
+//            //Сохраняем запрос
+//            suggestions.saveRecentQuery(query, null);
+//            Intent i = new Intent(MainActivity.this, SearchActivity.class);
+//            i.putExtra("searchString", query);
+//            startActivity(i);
+//        }
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.search_record:
+                onSearchRequested();
+                return true;
+            case R.id.quit:
+                finish();
+                return true;
+            case R.id.clear_recent_suggestions:
+                SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                        SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
+                suggestions.clearHistory();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+    }
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            doMySearch(query);
+        }
+    }
+    private void doMySearch(String query){
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
+        suggestions.saveRecentQuery(query, null);
+        Intent i = new Intent(MainActivity.this, SearchActivity.class);
+        i.putExtra("searchString", query);
+        startActivity(i);
     }
 }

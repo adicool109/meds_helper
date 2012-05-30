@@ -213,4 +213,11 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return subCatsIds;
     }
+    public Cursor fetchRecordsByQuery(String query) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(true, TABLE_DRUGS, new String[] { "id",
+                "title" }, "title" + " LIKE " + "'%" + query + "%'", null,
+                null, null, null, null);
+        return cursor;
+    }
 }

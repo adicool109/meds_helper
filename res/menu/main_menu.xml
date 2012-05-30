@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/search_record"
+          android:title="Search" />
+    <item android:id="@+id/quit"
+          android:title="Quit" />
+    <item android:id="@+id/clear_recent_suggestions"
+          android:title="Clear search history" />
+</menu>

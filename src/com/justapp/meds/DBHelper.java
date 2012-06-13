@@ -17,6 +17,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static String DB_NAME = "meds_db.sqlite3";
     private static final String TABLE_CATEGORIES = "categories";
     private static final String TABLE_DRUGS = "drugs";
+    private static final String TABLE_DRUGS_CATEGORIES = "drugs_categories";
 
     private SQLiteDatabase myDataBase;
     private final Context myContext;
@@ -113,8 +114,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.rawQuery(selectQuery, null);
     }
 
-    public Cursor getDrugsById(int id) {
-        String selectQuery = "SELECT  * FROM " + TABLE_DRUGS + " WHERE parent_id=" + id + " ORDER BY title ASC";
+    public Cursor getDrugsByParentId(int id) {
+        String selectQuery = String.format("SELECT %1$s.id, %1$s.title FROM %2$s INNER JOIN %1$s on %1$s.id = %2$s.drug_id WHERE %2$s.category_id = %3$d", TABLE_DRUGS, TABLE_DRUGS_CATEGORIES, id);
         SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery(selectQuery, null);
     }
@@ -122,13 +123,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public String getDrugInfoById(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE_DRUGS, new String[]{"id",
-                "parent_id", "text", "title",}, "id=" + id,
-                null, null, null, null);
+        Cursor cursor = db.query(TABLE_DRUGS, new String[]{"id", "text", "title",}, "id=" + id, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
 
-        return new String(cursor.getString(2));
+        return new String(cursor.getString(1));
     }
 
     public Cursor getSubCatsById(int id) {

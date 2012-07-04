@@ -37,7 +37,7 @@ public class DrugsListActivity extends ListActivity {
         }
         try {
             myDbHelper.openDataBase();
-            Cursor cursor = myDbHelper.getDrugsById(selectedId);
+            Cursor cursor = myDbHelper.getDrugsByParentId(selectedId);
             if (cursor.moveToFirst()) {
                 do {
                     allDrugsTitles.add(stringHelper.asUpperCaseFirstChar(cursor.getString(1)));

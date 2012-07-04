@@ -12,6 +12,8 @@
             android:textSize="20dp"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="4dp"
             android:text="sample"
             android:layout_margin="4dip"
             android:layout_width="fill_parent"

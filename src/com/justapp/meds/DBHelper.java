@@ -1,20 +1,20 @@
 package com.justapp.meds;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+import com.justapp.meds.helpers.ZIP;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.sql.SQLException;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static String DB_PATH = "/data/data/com.justapp.meds/databases/";
-    private static String DB_NAME = "meds_db.sqlite3";
+    private static String DB_NAME = "db";
     private static final String TABLE_CATEGORIES = "categories";
     private static final String TABLE_DRUGS = "drugs";
 
@@ -35,27 +35,63 @@ public class DBHelper extends SQLiteOpenHelper {
         } else {
             this.getReadableDatabase();
             try {
-                copyDataBase();
-
-            } catch (IOException e) {
-                throw new Error("Error copying database");
+                CopyAssets();
+                ZIP.unzip(DB_PATH + "db.zip", DB_PATH);
+            } catch (Exception e) {
+                Log.e("medroid", e+"");
             }
         }
     }
 
-    private boolean checkDataBase() {
+    public boolean checkDataBase() {
         SQLiteDatabase checkDB = null;
         try {
             String myPath = DB_PATH + DB_NAME;
             checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
         } catch (SQLiteException e) {
+            Log.e("tag", "database does't exist yet " + e.getMessage());
             //database does't exist yet.
         }
         if (checkDB != null) {
             checkDB.close();
         }
-        return checkDB != null ? true : false;
+        return checkDB != null;
     }
+
+
+    private void CopyAssets() {
+        AssetManager assetManager = myContext.getAssets();
+        String[] files = null;
+        try {
+            files = assetManager.list("");
+        } catch (IOException e) {
+            Log.e("tag", e.getMessage());
+        }
+        for(String filename : files) {
+            InputStream in = null;
+            OutputStream out = null;
+            try {
+                in = assetManager.open(filename);
+                out = new FileOutputStream(DB_PATH + filename);
+                copyFile(in, out);
+                in.close();
+                in = null;
+                out.flush();
+                out.close();
+                out = null;
+            } catch(Exception e) {
+                Log.e("tag", e.getMessage());
+            }
+        }
+    }
+    private void copyFile(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while((read = in.read(buffer)) != -1){
+            out.write(buffer, 0, read);
+        }
+    }
+
 
     private void copyDataBase() throws IOException {
         InputStream myInput = myContext.getAssets().open(DB_NAME);
@@ -142,5 +178,13 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.query(true, TABLE_DRUGS, new String[]{"id",
                 "title"}, "title" + " LIKE " + "'%" + query + "%'", null,
                 null, null, "title ASC", null);
+    }
+    public String getSqliteVersion(){
+        Cursor cursor = SQLiteDatabase.openOrCreateDatabase(":memory:", null).rawQuery("select sqlite_version() AS sqlite_version", null);
+        String sqliteVersion = "";
+        while(cursor.moveToNext()){
+            sqliteVersion += cursor.getString(0);
+        }
+        return sqliteVersion;
     }
 }

@@ -1,11 +1,16 @@
 package com.justapp.meds;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.SearchManager;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,6 +25,8 @@ import java.util.List;
 public class MainActivity extends ListActivity {
     static List<String> allCategoriesTitles = new ArrayList<String>();
     static List<Integer> allCategoriesIds = new ArrayList<Integer>();
+    private String sqliteVersion;
+    public static final String PREFS_NAME = "MyPrefsFile";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,17 +34,16 @@ public class MainActivity extends ListActivity {
         allCategoriesTitles.clear();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list);
-        DBHelper myDbHelper = new DBHelper(this);
+        DBHelper myDbHelper;
         myDbHelper = new DBHelper(this);
+
 
         try {
             myDbHelper.createDataBase();
-        } catch (IOException ioe) {
-            throw new Error("Unable to create database");
-        }
-        try {
             myDbHelper.openDataBase();
+            sqliteVersion = myDbHelper.getSqliteVersion();
             Cursor cursor = myDbHelper.getAllCategories();
+            checkFirstAppRun();
             if (cursor.moveToFirst()) {
                 do {
                     allCategoriesTitles.add(stringHelper.asUpperCaseFirstChar(cursor.getString(1)));
@@ -45,8 +51,23 @@ public class MainActivity extends ListActivity {
                 } while (cursor.moveToNext());
             }
             myDbHelper.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (IOException ioe) {
+            throw new Error("Unable to create database");
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+            if ("3.5.9".equals(sqliteVersion)) {
+                AlertDialog dialogError = new AlertDialog.Builder(this).create();
+                dialogError.setButton("Close", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        System.exit(1);
+                    }
+                });
+                dialogError.setMessage(getString(R.string.android_sqlite_bug));
+                dialogError.show();
+            }
         }
 
         ListView listView = getListView();
@@ -72,6 +93,21 @@ public class MainActivity extends ListActivity {
                 }
             }
         });
+    }
+
+    private void checkFirstAppRun() {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        boolean dialogShown = settings.getBoolean("dialogShown", false);
+        if (!dialogShown) {
+            new AlertDialog.Builder(this)
+                    .setTitle(MainActivity.this.getString(R.string.welcome)) //set the Title text
+                    .setIcon(R.drawable.icon) //Set the picture in the top left of the popup
+                    .setMessage(Html.fromHtml(getString(R.string.about_text)))
+                    .setNeutralButton("OK", null).show(); //Sets the button type
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putBoolean("dialogShown", true);
+            editor.commit();
+        }
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

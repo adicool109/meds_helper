@@ -28,7 +28,7 @@ public class SearchActivity extends ListActivity {
         }
         TextView searchHeader = (TextView) findViewById(R.id.searchString);
         String queryString = getQueryString();
-        searchHeader.setText("Search for " + queryString);
+        searchHeader.setText(getString(R.string.search_for) + " " + queryString);
         showResults(queryString);
     }
 

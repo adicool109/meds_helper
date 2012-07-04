@@ -6,6 +6,7 @@
     <string name="search_hint">Search the records</string>
     <string name="search">Search</string>
     <string name="add">Add</string>
+    <string name="android_sqlite_bug">This is know bug with android 2.1, please restart application.</string>
     <string name="about_text">  <![CDATA[
         <h1>медroid 1.0</h1>
         <p>Разработано в Oymo Studio</p>
@@ -13,4 +14,9 @@
         <p>При несовпадении данных справочника с данными, предоставленными производителями препаратов, последние считать более достоверными.</p>
      ]]>
     </string>
+    <string name="welcome">Welcome!</string>
+    <string name="search_for">Search for</string>
+    <string name="clear_search_history">Clear search history</string>
+    <string name="about">About</string>
+    <string name="quit">Quit</string>
 </resources>

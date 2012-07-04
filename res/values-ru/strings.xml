@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Медroid</string>
+    <string name="text">Введите текст</string>
+    <string name="no_records">Ничего не найдено</string>
+    <string name="search_hint">Поиск</string>
+    <string name="search">Поиск</string>
+    <string name="add">Добавить</string>
+    <string name="android_sqlite_bug">Известная ошибка в android 2.1, пожалуйста перезапустите приложение.</string>
+    <string name="about_text">  <![CDATA[
+        <h1>медroid 1.0</h1>
+        <p>Разработано в Oymo Studio</p>
+        <p>Данный справочник по лекарствам разработан исключительно для справочных целей и не является руководством.</p>
+        <p>При несовпадении данных справочника с данными, предоставленными производителями препаратов, последние считать более достоверными.</p>
+     ]]>
+    </string>
+    <string name="welcome">Добро пожаловать!</string>
+    <string name="search_for">Поиск</string>
+    <string name="clear_search_history">Удалить историю поиска</string>
+    <string name="about">О приложении</string>
+    <string name="quit">Выход</string>
+</resources>

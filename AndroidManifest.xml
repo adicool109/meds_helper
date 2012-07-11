@@ -21,11 +21,28 @@
                     android:resource="@xml/searchable"
                     />
         </activity>
-        <activity android:name=".DrugsListActivity"/>
-        <activity android:name=".SubCategoryActivity"/>
+        <activity android:name=".DrugsListActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <meta-data
+                    android:name="android.app.searchable"
+                    android:resource="@xml/searchable"
+                    />
+        </activity>
+        <activity android:name=".SubCategoryActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <meta-data
+                    android:name="android.app.searchable"
+                    android:resource="@xml/searchable"
+                    />
+        </activity>
         <activity android:name=".DrugActivity"/>
         <activity android:name=".AboutActivity"/>
         <activity android:name=".SearchActivity"/>
+
         <provider android:name=".SuggestionProvider"
                   android:authorities="com.justapp.meds.SuggestionProvider"/>
     </application>

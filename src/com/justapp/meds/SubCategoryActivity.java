@@ -1,12 +1,12 @@
 package com.justapp.meds;
 
 import android.app.ListActivity;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.provider.SearchRecentSuggestions;
+import android.view.*;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,13 +19,14 @@ import java.util.List;
 public class SubCategoryActivity extends ListActivity {
     static List<String> allSubCatsTitle = new ArrayList<String>();
     static List<Integer> allSubCatsIds = new ArrayList<Integer>();
+    private int selectedId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         allSubCatsTitle.clear();
         allSubCatsIds.clear();
         String title = getIntent().getExtras().getString("title");
-        int selectedId = getIntent().getExtras().getInt("id");
+        selectedId = getIntent().getExtras().getInt("id");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list);
@@ -65,6 +66,55 @@ public class SubCategoryActivity extends ListActivity {
         Intent i = new Intent(SubCategoryActivity.this, DrugsListActivity.class);
         i.putExtra("title", allSubCatsTitle.get(position - 1));
         i.putExtra("id", allSubCatsIds.get(position - 1));
+        startActivity(i);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.search_record:
+                onSearchRequested();
+                return true;
+            case R.id.quit:
+                finish();
+                return true;
+            case R.id.clear_recent_suggestions:
+                SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                        SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
+                suggestions.clearHistory();
+                return true;
+            case R.id.about:
+                Intent i = new Intent(SubCategoryActivity.this, AboutActivity.class);
+                startActivity(i);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+    }
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            doMySearch(query);
+        }
+    }
+    private void doMySearch(String query){
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
+        suggestions.saveRecentQuery(query, null);
+        Intent i = new Intent(SubCategoryActivity.this, SearchActivity.class);
+        i.putExtra("searchString", query);
+        i.putExtra("categoryId", selectedId);
         startActivity(i);
     }
 }

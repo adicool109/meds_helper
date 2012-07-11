@@ -154,6 +154,7 @@ public class MainActivity extends ListActivity {
         suggestions.saveRecentQuery(query, null);
         Intent i = new Intent(MainActivity.this, SearchActivity.class);
         i.putExtra("searchString", query);
+        i.putExtra("categoryId", -1);
         startActivity(i);
     }
 }

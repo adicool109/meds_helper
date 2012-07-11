@@ -178,6 +178,12 @@ public class DBHelper extends SQLiteOpenHelper {
                 "title"}, "title" + " LIKE " + "'%" + query + "%'", null,
                 null, null, "title ASC", null);
     }
+    public Cursor fetchDrugsByNameAndParentId(String query, int id) {
+        String selectQuery = "SELECT  * FROM " + TABLE_DRUGS + " WHERE title LIKE '%" + query + "%' parent_id=" + id + " ORDER BY title ASC";
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery(selectQuery, null);
+    }
+
     public String getSqliteVersion(){
         Cursor cursor = SQLiteDatabase.openOrCreateDatabase(":memory:", null).rawQuery("select sqlite_version() AS sqlite_version", null);
         String sqliteVersion = "";

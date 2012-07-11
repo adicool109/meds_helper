@@ -3,6 +3,7 @@ package com.justapp.meds;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,10 +12,8 @@ import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.text.Html;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
 
 import java.io.IOException;
@@ -33,7 +32,16 @@ public class MainActivity extends ListActivity {
         allCategoriesIds.clear();
         allCategoriesTitles.clear();
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.list);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
+
+        final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View curtain = inflater.inflate(R.layout.curtain, null);
+        curtain.setVisibility(View.VISIBLE);
+        addContentView(curtain, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+
         DBHelper myDbHelper;
         myDbHelper = new DBHelper(this);
 
@@ -154,6 +162,11 @@ public class MainActivity extends ListActivity {
         suggestions.saveRecentQuery(query, null);
         Intent i = new Intent(MainActivity.this, SearchActivity.class);
         i.putExtra("searchString", query);
+        i.putExtra("categoryId", -1);
         startActivity(i);
+    }
+
+    public void testToast(View view) {
+        Toast.makeText(this, "Test!!!", Toast.LENGTH_LONG).show();
     }
 }

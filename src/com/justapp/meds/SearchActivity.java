@@ -28,12 +28,18 @@ public class SearchActivity extends ListActivity {
         }
         TextView searchHeader = (TextView) findViewById(R.id.searchString);
         String queryString = getQueryString();
+        int categoryId = getIntent().getExtras().getInt("categoryId");
         searchHeader.setText(getString(R.string.search_for) + " " + queryString);
-        showResults(queryString);
+        showResults(queryString, categoryId);
     }
 
-    private void showResults(String query) {
-        Cursor cursor = mDbHelper.fetchRecordsByQuery(query);
+    private void showResults(String query, int categoryId) {
+        Cursor cursor;
+        if(categoryId == -1){
+            cursor = mDbHelper.fetchRecordsByQuery(query);
+        } else {
+            cursor = mDbHelper.fetchDrugsByNameAndParentId(query, categoryId);
+        }
         startManagingCursor(cursor);
 
         searchElementsIds = new ArrayList<Integer>();

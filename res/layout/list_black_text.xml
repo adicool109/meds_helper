@@ -2,12 +2,13 @@
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:gravity="center_vertical"
+        android:background="@color/list_selector_colors"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
     <!-- Defining where should text be placed. You set you text color here-->
     <TextView
             android:id="@+id/list_content"
-            android:textColor="#FFFFFF"
+            android:textColor="#424037"
             android:gravity="left"
             android:textSize="20dp"
             android:paddingTop="12dp"

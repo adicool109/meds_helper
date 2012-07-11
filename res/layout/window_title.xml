@@ -2,16 +2,23 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="85dp"
+        android:layout_height="85px"
         android:background="@drawable/app_background">
 
     <ImageView
             android:id="@+id/headerAndroidImg"
             android:src="@drawable/logo"
-            android:layout_width="110dp"
-            android:layout_height="85dp"
+            android:layout_width="110px"
+            android:layout_height="85px"
             android:contentDescription=""/>
+    <Button android:id="@+id/headerSearchButton"
+            android:layout_height="85px"
+            android:layout_width="65px"
+            android:layout_alignParentRight="true"
+            android:onClick="testToast"
+            android:background="@drawable/lens"/>
     <TextView
+            android:id="@+id/headerTitle"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_centerHorizontal="true"
@@ -19,14 +26,8 @@
             android:layout_toRightOf="@id/headerAndroidImg"
             android:layout_toLeftOf="@id/headerSearchButton"
             android:textColor="#ffffff"
-            android:textSize="24dp"
+            android:textSize="28px"
             android:textStyle="bold"
             android:text="медroid">
     </TextView>
-    <Button android:id="@+id/headerSearchButton"
-            android:layout_height="85dp"
-            android:layout_width="65dp"
-            android:layout_alignParentRight="true"
-            android:onClick="testToast"
-            android:background="@drawable/lens"/>
 </RelativeLayout>

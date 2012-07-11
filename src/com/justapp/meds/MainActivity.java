@@ -166,7 +166,7 @@ public class MainActivity extends ListActivity {
         startActivity(i);
     }
 
-    public void testToast(View view) {
-        Toast.makeText(this, "Test!!!", Toast.LENGTH_LONG).show();
+    public void headerSearchButtonClicked(View view) {
+        onSearchRequested();
     }
 }

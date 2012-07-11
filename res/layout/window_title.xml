@@ -15,7 +15,7 @@
             android:layout_height="85px"
             android:layout_width="65px"
             android:layout_alignParentRight="true"
-            android:onClick="testToast"
+            android:onClick="headerSearchButtonClicked"
             android:background="@drawable/lens"/>
     <TextView
             android:id="@+id/headerTitle"
@@ -28,6 +28,7 @@
             android:textColor="#ffffff"
             android:textSize="28px"
             android:textStyle="bold"
+            android:maxLines="2"
             android:text="медroid">
     </TextView>
 </RelativeLayout>

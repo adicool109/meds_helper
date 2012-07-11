@@ -2,6 +2,7 @@ package com.justapp.meds;
 
 import android.app.ListActivity;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -29,10 +30,16 @@ public class SubCategoryActivity extends ListActivity {
         selectedId = getIntent().getExtras().getInt("id");
 
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.list);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
         DBHelper myDbHelper = new DBHelper(this);
         myDbHelper = new DBHelper(this);
 
+        final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View curtain = inflater.inflate(R.layout.curtain, null);
+        curtain.setVisibility(View.VISIBLE);
+        addContentView(curtain, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         try {
             myDbHelper.createDataBase();
         } catch (IOException ioe) {
@@ -52,20 +59,23 @@ public class SubCategoryActivity extends ListActivity {
             e.printStackTrace();
         }
         ListView lv = getListView();
-        LayoutInflater inflater = getLayoutInflater();
-        View header = inflater.inflate(R.layout.list_header, (ViewGroup) findViewById(R.id.header_layout_root));
-        TextView categoryName = (TextView) header.findViewById(R.id.categoryName);
+//        LayoutInflater inflater = getLayoutInflater();
+//        View header = inflater.inflate(R.layout.list_header, (ViewGroup) findViewById(R.id.header_layout_root));
+//        TextView categoryName = (TextView) header.findViewById(R.id.categoryName);
+//        categoryName.setText(title);
+//        lv.addHeaderView(header, null, false);
+        TextView categoryName = (TextView) findViewById(R.id.headerTitle);
         categoryName.setText(title);
-        lv.addHeaderView(header, null, false);
-        lv.setAdapter(new ArrayAdapter<String>(this,R.layout.list_black_text,R.id.list_content, allSubCatsTitle));
+        lv.setAdapter(new ArrayAdapter<String>(this, R.layout.list_black_text, R.id.list_content, allSubCatsTitle));
+
 
     }
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         Intent i = new Intent(SubCategoryActivity.this, DrugsListActivity.class);
-        i.putExtra("title", allSubCatsTitle.get(position - 1));
-        i.putExtra("id", allSubCatsIds.get(position - 1));
+        i.putExtra("title", allSubCatsTitle.get(position));
+        i.putExtra("id", allSubCatsIds.get(position));
         startActivity(i);
     }
 
@@ -116,5 +126,8 @@ public class SubCategoryActivity extends ListActivity {
         i.putExtra("searchString", query);
         i.putExtra("categoryId", selectedId);
         startActivity(i);
+    }
+    public void headerSearchButtonClicked(View view) {
+        onSearchRequested();
     }
 }

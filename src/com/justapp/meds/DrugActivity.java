@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.webkit.WebView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -66,5 +67,8 @@ public class DrugActivity extends Activity {
                 "</body>\n" +
                 "</html>";
             drugInfoContainer.loadDataWithBaseURL("",header,"text/html","utf-8",null);
+    }
+    public void headerSearchButtonClicked(View view) {
+        Toast.makeText(this, "TODO", Toast.LENGTH_LONG).show();
     }
 }
